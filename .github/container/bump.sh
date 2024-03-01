@@ -89,10 +89,11 @@ for pkg in $(yq e 'keys | .[]' $MANIFEST_OUT); do
         url=$(yq e ".${pkg}.url" $MANIFEST_OUT)
         tracking_ref=$(yq e ".${pkg}.tracking_ref" $MANIFEST_OUT)
         if ! new_ref=$(git ls-remote --exit-code $url $tracking_ref | awk '{print $1}'); then
-	    echo "Could not fetch $tracking_ref from $url"
-	    exit 1
-	fi
+	          echo "Could not fetch $tracking_ref from $url"
+	          exit 1
+	      fi
         yq e ".${pkg}.latest_verified_commit = \"$new_ref\"" -i $MANIFEST_OUT
+        echo "bumping pkg "$pkg " with new ref "$new_ref
     fi
 
     has_patches=$(yq e ".${pkg} | has(\"patches\")" $MANIFEST_OUT)
