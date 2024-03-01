@@ -34,6 +34,12 @@ ARG CLANG_VERSION
 ARG JAX_TOOLBOX_REF
 ENV CUDA_BASE_IMAGE=${BASE_IMAGE}
 
+################################################################################
+## update apt repo
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+RUN dpkg -i cuda-keyring_1.0-1_all.deb
+################################################################################
+
 ###############################################################################
 ## Install Python and essential tools
 ###############################################################################
@@ -57,13 +63,17 @@ apt_packages=(
   python3-pip
   rsync
   vim
+  gdb
   wget
+  valgrind
   jq
   # llvm.sh
   lsb-release 
   software-properties-common
   # GCP autoconfig
   pciutils hwloc bind9-host
+  # NCCL
+  devscripts debhelper fakeroot
 )
 if [[ $(dpkg --print-architecture) == arm64 ]]; then
   # h5py: The newest release of of h5py (3.11.0) does not include ARM wheels and causes pip to build h5py.
@@ -151,6 +161,19 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1
 # and fails due to pip-24.0 has been installed with system tool `apt` but not `python`. So we keep 
 # both pip-24.0 and pip-23.3.1 in the system, but use 23.3.1 with equivalency patch (see above).
 RUN pip install --upgrade --ignore-installed --no-cache-dir -e /opt/pip pip-tools && rm -rf ~/.cache/*
+
+###############################################################################
+RUN addgroup --gid 13214 shawnw
+RUN adduser --disabled-password --gecos ''  -u 13214 -gid 30 shawnw
+RUN addgroup --gid 1646 gpu-prd-design
+RUN addgroup --gid 1666 gpu-prd-info
+RUN addgroup --gid 664  bmeister
+RUN usermod -a -G gpu-prd-design shawnw
+RUN usermod -a -G gpu-prd-info shawnw
+RUN usermod -a -G bmeister root
+RUN adduser shawnw sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+###############################################################################
 
 ###############################################################################
 ## Install TCPx
