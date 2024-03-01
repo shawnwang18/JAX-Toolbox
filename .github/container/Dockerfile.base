@@ -53,7 +53,9 @@ apt_packages=(
   python3-pip
   rsync
   vim
+  gdb
   wget
+  valgrind
   jq
   # llvm.sh
   lsb-release software-properties-common
@@ -126,6 +128,19 @@ git add -u
 git commit -m 'Adds JAX_TOOLBOX_VCS_EQUIVALENCY as a trigger to treat all github VCS installs for a package as equivalent. The spec of the last encountered version will be used'
 EOF
 RUN pip install --upgrade --no-cache-dir -e /opt/pip pip-tools && rm -rf ~/.cache/*
+
+###############################################################################
+RUN addgroup --gid 13214 shawnw
+RUN adduser --disabled-password --gecos ''  -u 13214 -gid 30 shawnw
+RUN addgroup --gid 1646 gpu-prd-design
+RUN addgroup --gid 1666 gpu-prd-info
+RUN addgroup --gid 664  bmeister
+RUN usermod -a -G gpu-prd-design shawnw
+RUN usermod -a -G gpu-prd-info shawnw
+RUN usermod -a -G bmeister root
+RUN adduser shawnw sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+###############################################################################
 
 ###############################################################################
 ## Install TCPx

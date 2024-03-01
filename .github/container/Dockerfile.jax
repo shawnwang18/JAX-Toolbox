@@ -53,6 +53,7 @@ RUN build-jax.sh \
     --src-path-jax ${SRC_PATH_JAX} \
     --src-path-xla ${SRC_PATH_XLA} \
     --sm all \
+    --debug \
     --xla-arm64-patch /opt/xla-arm64-neon.patch \ 
     --clean
 
