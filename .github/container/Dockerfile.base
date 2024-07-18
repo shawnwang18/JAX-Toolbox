@@ -55,6 +55,8 @@ apt_packages=(
   vim
   wget
   jq
+  gdb
+  gdbserver
   # llvm.sh
   lsb-release software-properties-common
   # GCP autoconfig
