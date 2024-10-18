@@ -6,9 +6,9 @@ export DEBIAN_FRONTEND=noninteractive
 export TZ=America/Los_Angeles
 
 # If NCCL is already installed, don't reinstall it. Print a message and exit
-if dpkg -s libnccl2 libnccl-dev &> /dev/null; then
-    echo "NCCL is already installed. Skipping installation."
-else
+# if dpkg -s libnccl2 libnccl-dev &> /dev/null; then
+#     echo "NCCL is already installed. Skipping installation."
+# else
     apt-get update
 
     # Extract CUDA version from `nvcc --version` output line
@@ -31,7 +31,7 @@ else
 
     apt-get clean
     rm -rf /var/lib/apt/lists/*
-fi
+# fi
 
 # Create a prefix with include/ and lib/ directories containing symlinks to the NCCL
 # version installed at the system level; this is useful to pass to XLA to avoid it
