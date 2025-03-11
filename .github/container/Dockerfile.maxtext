@@ -29,7 +29,7 @@ done
 # add new line in case requirements.txt does not end with a new line
 echo >> ${SRC_PATH_MAXTEXT}/requirements.txt
 for requirement in \
-    "array-record=0.6.0" \
+    "array-record==0.6.0" \
     "tensorflow-metadata>=1.15.0" \
     "seqio@git+https://github.com/google/seqio.git" \
   ; do
